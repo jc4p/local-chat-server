@@ -1,10 +1,15 @@
 {
+  "name": "local-chat-server",
+  "version": "1.0.0",
+  "description": "backend for local chat app",
+  "license": "ISC",
   "dependencies": {
     "knex": "^0.95.11",
     "nanoid": "^3.1.25",
     "pg": "^8.7.1"
   },
   "devDependencies": {
+    "node-read-yaml": "^1.0.1",
     "serverless-offline": "^8.2.0"
   }
 }
