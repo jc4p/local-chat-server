@@ -5,7 +5,8 @@ module.exports = function(knex) {
     t.dateTime('created_at').notNull().defaultTo(knex.fn.now());
     t.dateTime('updated_at').notNull().defaultTo(knex.fn.now());
 
-    t.integer('chat_id').notNull().references('id').inTable('chats').onDelete('CASCADE').index('message_chat_id_index', 'HASH');
+    t.string('chat_uid', 24).notNull().references('chat_uid').inTable('chats').onDelete('CASCADE').index();
+    t.integer('sender').references('id').inTable('users').onDelete('SET NULL');
     t.text('message').notNull();
     t.jsonb('attributes');
 

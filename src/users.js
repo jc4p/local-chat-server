@@ -9,9 +9,10 @@ const create = async (event) => {
   const hashed = await bcrypt.hash(password, 10);
 
   const db = await utils.getDatabase()
+  let user
   try {
-    await db.query({
-      text: 'INSERT INTO users (username, password) VALUES ($1, $2)',
+    user = await db.query({
+      text: 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
       values: [username, hashed]
     })
   }
@@ -22,7 +23,7 @@ const create = async (event) => {
     return res({ error: "Couldn't create user" })
   }
 
-  const token = utils.generateToken(username)
+  const token = utils.generateToken(user.rows[0].id, username)
 
   return res({
     token: token
@@ -50,7 +51,9 @@ const login = async (event) => {
     return res({ error: 'Invalid password'})
   }
 
-  const token = utils.generateToken(user.rows[0].username)
+  const userRow = user.rows[0]
+
+  const token = utils.generateToken(userRow.id, userRow.username)
 
   return res({
     token: token
