@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "knex": "^0.95.11",
+    "nanoid": "^3.1.25",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "serverless-offline": "^8.2.0"
+  }
+}
