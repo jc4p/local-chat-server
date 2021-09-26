@@ -14,3 +14,21 @@ provider:
 functions:
   hello:
     handler: src/dev.hello
+  createUser:
+    handler: src/users.create
+    events:
+      - http:
+          method: POST
+          path: /users/create
+  createChat:
+    handler: src/chats.create
+    events:
+      - http:
+          method: POST
+          path: /chats/create
+  sendMessage:
+    handler: src/messages.send
+    events:
+      - http:
+          method: POST
+          path: /messages/send
