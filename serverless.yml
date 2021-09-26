@@ -20,6 +20,12 @@ functions:
       - http:
           method: POST
           path: /users/create
+  loginUser:
+    handler: src/users.login
+    events:
+      - http:
+          method: POST
+          path: /users/login
   createChat:
     handler: src/chats.create
     events:

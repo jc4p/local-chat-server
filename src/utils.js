@@ -1,14 +1,32 @@
 const jwt = require('jsonwebtoken')
+const pg = require('pg')
 
-const getDatabase = () => {
-  return null
+const getDatabase = async () => {
+  client = new pg.Client({
+    host: process.env.APP_DB_HOST,
+    user: process.env.APP_DB_USER,
+    database: process.env.APP_DB_NAME,
+    password: process.env.APP_DB_PASSWORD
+  })
+  // i think if the same instance of a deployed function gets called multiple times this might try to re-connect
+  await client.connect()
+  return client
 }
 
-const returnJson = (payload) => {
+const returnJson = (payload, statusCode) => {
   return {
-    statusCode: 200,
+    statusCode: statusCode || 200,
     body: JSON.stringify(payload)
   }
+}
+
+const verifyAuthHeader = (headers) => {
+  if (!headers.hasOwnProperty('Authorization')) { return false }
+
+  const auth = headers.Authorization
+  if (!auth.indexOf('Bearer ') === 0) { return false }
+
+  return verifyToken(auth.split('Bearer ')[1])
 }
 
 const generateToken = (username, expiration) => {
@@ -41,5 +59,6 @@ module.exports = {
   getDatabase,
   generateToken,
   verifyToken,
+  verifyAuthHeader,
   returnJson
 }

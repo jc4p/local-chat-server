@@ -3,10 +3,7 @@ const utils = require('./utils')
 const res = utils.returnJson
 
 const create = async (event) => {
-  const auth = event.headers.Authorization
-  const jwt = auth.split('Bearer ')[1]
-
-  const token = utils.verifyToken(jwt)
+  const token = utils.verifyAuthHeader(event.headers)
 
   if (!token) {
     return res({ error: 'Invalid user' })

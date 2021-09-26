@@ -3,25 +3,61 @@ const utils = require('./utils')
 const res = utils.returnJson
 
 const create = async (event) => {
-  const { username, password } = JSON.parse(event.body);
+  const { username, password } = JSON.parse(event.body)
   if (!username || !password) { return res({ error: 'Invalid arguments' }) }
 
   const hashed = await bcrypt.hash(password, 10);
 
-  const newUser = {
-    username: username,
-    password: hashed
+  const db = await utils.getDatabase()
+  try {
+    await db.query({
+      text: 'INSERT INTO users (username, password) VALUES ($1, $2)',
+      values: [username, hashed]
+    })
+  }
+  catch (err) {
+    if (err.detail.indexOf('already exists') > -1) {
+      return res({ error: 'User already exists' })
+    }
+    return res({ error: "Couldn't create user" })
   }
 
   const token = utils.generateToken(username)
 
   return res({
-    message: 'Going to create the following user and return this auth token',
-    newUser: newUser,
+    token: token
+  })
+}
+
+const login = async (event) => {
+  const { username, password } = JSON.parse(event.body)
+  if (!username || !password) { return res({ error: 'Invalid arguments' }) }
+
+  const db = await utils.getDatabase()
+
+  const user = await db.query({
+    text: 'SELECT * FROM users WHERE username = $1',
+    values: [username]
+  })
+
+  if (user.rows.length === 0) {
+    return res({ error: 'No such user' })
+  }
+
+  const correctInput = await bcrypt.compare(password, user.rows[0].password)
+
+  if (!correctInput) {
+    return res({ error: 'Invalid password'})
+  }
+
+  const token = utils.generateToken(user.rows[0].username)
+
+  return res({
     token: token
   })
 }
 
 module.exports = {
-  create
+  create,
+  login
 }
