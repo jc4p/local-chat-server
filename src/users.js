@@ -6,6 +6,9 @@ const create = async (event) => {
   const { username, password } = JSON.parse(event.body)
   if (!username || !password) { return res({ error: 'Invalid arguments' }) }
 
+  if (username.length < 3) { return res({ error: 'Requested username too short' }) }
+  if (username.length > 64) { return res({ error: 'Requested username too long' }) }
+
   const hashed = await bcrypt.hash(password, 10);
 
   const db = await utils.getDatabase()
