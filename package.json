@@ -8,7 +8,8 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.11",
     "nanoid": "^3.1.25",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "ws": "^8.2.2"
   },
   "devDependencies": {
     "node-read-yaml": "^1.0.1",

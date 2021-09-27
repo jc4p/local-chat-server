@@ -29,8 +29,8 @@ const create = async (event) => {
   return res({
     chat: {
       id: chatId,
-      creator: token.name,
-      users: [token.name]
+      creator: token.username,
+      users: [token.username]
     }
   })
 }

@@ -29,11 +29,12 @@ const verifyAuthHeader = (headers) => {
   return verifyToken(auth.split('Bearer ')[1])
 }
 
-const generateToken = (userId, username, expiration) => {
+const generateToken = (userId, username, expiration, role) => {
   return jwt.sign(
     {
       id: userId,
-      name: username
+      username: username,
+      role: role || 'user'
     },
     process.env.JWT_SECRET,
     {
